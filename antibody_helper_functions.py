@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # helper functions for your analysis of data from Isobel Hawes, for Le Yan and the biohub
 # import libraries
 import numpy as np
