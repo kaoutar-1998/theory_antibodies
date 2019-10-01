@@ -10,7 +10,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 # import itertools, reduce to examine intersection of four different sampling dates
-from itertools import chain, combinations
+from itertools import chain
+from itertools import combinations
 from itertools import product
 from functools import reduce
 # processing data
