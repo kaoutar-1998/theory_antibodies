@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# this script demonstrates that we can construct the similarity matrix in asimov
 # import functions
 import numpy as np
 import scipy
@@ -28,7 +29,10 @@ import os
 import antibody_helper_functions as fxns
 # download data
 # file_names gives which files are in the desired directory, given by PATH
-PATH = "../../antibodies/isobel_data/2019_09_24_data_pipeline/"
+# PATH in windows is
+# PATH = "../../antibodies/isobel_data/2019_09_24_data_pipeline/"
+# PATH In vm is
+PATH = "../2019_09_24_data_pipeline/"
 file_names = []
 for root, dirs, files in os.walk(PATH):
     for filename in files:
@@ -51,7 +55,6 @@ peptides_289 = peptides_289[0:5]
 # create similarity matrix
 # score is given by alignments divided by length, so gives an output between 0 and 1
 # definitely can change how the scoring is accomplished
-print("made it to before constructing similarity matrix")
 outer_lst = []
 for p1 in peptides_289:
     inner_lst = []
@@ -61,15 +64,12 @@ for p1 in peptides_289:
     outer_lst.append(inner_lst)
 corr_mat = np.array(outer_lst)
 corr_mat_df = pd.DataFrame(corr_mat, index = peptides_289)
-print("made it to after constructing similarity matrix")
 # make the cluster map
-# sim_mat = sns.clustermap(corr_mat_df, cmap = 'jet', vmin = -1, vmax = 1, cbar_kws = {'label' : 'peptide sequence similarity'})
-sim_mat = sns.clustermap(corr_mat_df)
-print("made it to after the clustermap was called")
+sim_mat = sns.clustermap(corr_mat_df, cmap = 'jet', vmin = -1, vmax = 1, cbar_kws = {'label' : 'peptide sequence similarity'})
+# sim_mat = sns.clustermap(corr_mat_df)
 # how we may want to reorder peptides_289 so as to correspond to the clustering shown above
 reorder_inds_peps_289 = sim_mat.dendrogram_col.reordered_ind
 reordered_peps_289 = [peptides_289[x] for x in reorder_inds_peps_289]
 reordered_corr_mat = [[corr_mat[x][y] for y in reorder_inds_peps_289] for x in reorder_inds_peps_289]
-reordered_corr_mat_df = pd.DataFrame(reordered_corr_mat, index = reordered_peps_289)
-print("made it to right before writing the file")
+reordered_corr_mat_df = pd.DataFrame(reordered_corr_mat, index = reordered_peps_289, columns = reordered_peps_289)
 reordered_corr_mat_df.to_csv("pep_289_sim_mat.csv")
